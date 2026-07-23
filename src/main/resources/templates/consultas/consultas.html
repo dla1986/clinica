@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-base-200">
+
+    <div th:insert="~{misc/fragments :: menuAtendimento}"></div>
+
+    <div class="container mx-auto p-8">
+
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-4xl font-bold text-primary">
+                    <i class="fa-solid fa-calendar-check"></i> Consultas
+                </h1>
+                <p class="text-base-content/70">Cadastro e gerenciamento das consultas da clínica.</p>
+            </div>
+            <button class="btn btn-primary" onclick="consulta_modal.showModal()">
+                <i class="fa-solid fa-plus"></i> Nova Consulta
+            </button>
+        </div>
+
+        <div class="overflow-x-auto bg-base-100 rounded-xl shadow-lg">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>Paciente (CPF)</th>
+                        <th>Médico (CRM)</th>
+                        <th>Data/Hora</th>
+                        <th>Previsão de Volta</th>
+                        <th>Observação</th>
+                        <th width="170">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="consulta : ${consultas}">
+                        <td>
+                            <span class="badge badge-primary"
+                                  th:text="${consulta.pacienteCpf}"></span>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary"
+                                  th:text="${consulta.medicoCrm}"></span>
+                        </td>
+                        <td th:text="${consulta.dataHora}"></td>
+                        <td th:text="${consulta.dataHoraVolta}"></td>
+                        <td th:text="${consulta.observacao}"></td>
+                        <td>
+                            <div class="join">
+                                <a class="btn btn-warning btn-sm join-item"
+                                   th:href="@{'/consultas/edit/' + ${consulta.codigo}}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                <button class="btn btn-error btn-sm join-item"
+                                        th:onclick="'excluir('+${consulta.codigo}+');'">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(consultas)}">
+                        <td colspan="6" class="text-center text-base-content/50 py-6">
+                            Nenhuma consulta cadastrada.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <dialog id="consulta_modal" class="modal"
+            th:attrappend="open=${consulta != null and consulta.codigo != 0} ? 'open' : null">
+        <div class="modal-box max-w-2xl">
+
+            <a th:href="@{/consultas}" class="btn btn-circle btn-sm btn-ghost absolute right-2 top-2">✕</a>
+
+            <h3 class="font-bold text-2xl mb-6">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <span th:text="${consulta.codigo != 0} ? 'Editar Consulta' : 'Nova Consulta'"></span>
+            </h3>
+
+            <form th:action="@{/consultas/save}" method="post" th:object="${consulta}">
+
+                <input type="hidden" th:field="*{codigo}"/>
+
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="label"><span class="label-text">CPF do Paciente</span></label>
+                        <select class="select select-bordered w-full" th:field="*{pacienteCpf}" required>
+                            <option value="">Selecione...</option>
+                            <option th:each="p : ${pacientes}"
+                                    th:value="${p.cpf}"
+                                    th:text="${p.nome} + ' (' + ${p.cpf} + ')'"></option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="label"><span class="label-text">CRM do Médico</span></label>
+                        <select class="select select-bordered w-full" th:field="*{medicoCrm}" required>
+                            <option value="">Selecione...</option>
+                            <option th:each="m : ${medicos}"
+                                    th:value="${m.crm}"
+                                    th:text="${m.nome} + ' (' + ${m.crm} + ')'"></option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="label"><span class="label-text">Data e Hora</span></label>
+                        <input type="datetime-local" class="input input-bordered w-full"
+                               th:field="*{dataHora}" required/>
+                    </div>
+
+                    <div>
+                        <label class="label"><span class="label-text">Previsão de Volta</span></label>
+                        <input type="datetime-local" class="input input-bordered w-full"
+                               th:field="*{dataHoraVolta}"/>
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+                    <label class="label"><span class="label-text">Observação</span></label>
+                    <textarea class="textarea textarea-bordered w-full" rows="4"
+                              th:field="*{observacao}"></textarea>
+                </div>
+
+                <div class="modal-action">
+                    <a th:href="@{/consultas}" class="btn">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <a th:href="@{/consultas}" class="modal-backdrop">Fechar</a>
+    </dialog>
+
+    <script>
+        function excluir(codigo) {
+            if (confirm("Deseja excluir esta consulta?")) {
+                location.href = "/consultas/delete/" + codigo;
+            }
+        }
+    </script>
+
+</body>
+</html>

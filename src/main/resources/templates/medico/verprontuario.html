@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Prontuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-200">
+
+    <div th:insert="~{misc/fragments :: menuMedico}"></div>
+
+    <div class="container mx-auto p-8 max-w-4xl">
+
+        <!-- Cabeçalho -->
+        <div class="mb-6 flex items-center gap-4">
+            <a href="/medico/consultas" class="btn btn-ghost btn-sm">
+                <i class="fa-solid fa-arrow-left"></i> Voltar
+            </a>
+            <h1 class="text-3xl font-bold text-success">
+                <i class="fa-solid fa-file-medical"></i> Prontuário da Consulta
+            </h1>
+        </div>
+
+        <!-- Dados do Paciente + Consulta -->
+        <div class="card bg-base-100 shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-primary">
+                    <i class="fa-solid fa-user"></i> Paciente
+                </h2>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div>
+                        <p class="text-sm text-base-content/60">Nome</p>
+                        <p class="font-semibold"
+                           th:text="${paciente != null} ? ${paciente.nome} : 'Não encontrado'"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-base-content/60">CPF</p>
+                        <p class="font-semibold" th:text="${consulta.pacienteCpf}"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-base-content/60">Data da Consulta</p>
+                        <p class="font-semibold" th:text="${consulta.dataHora}"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-base-content/60">Observação</p>
+                        <p class="font-semibold" th:text="${consulta.observacao}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prontuário -->
+        <div class="card bg-base-100 shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-secondary">
+                    <i class="fa-solid fa-clipboard"></i> Prontuário
+                </h2>
+                <div th:if="${prontuario != null}" class="mt-2 space-y-3">
+                    <div>
+                        <p class="text-sm text-base-content/60">Descrição</p>
+                        <p class="font-semibold" th:text="${prontuario.descricao}"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-base-content/60">Observação</p>
+                        <p th:text="${prontuario.observacao}"></p>
+                    </div>
+                </div>
+                <p th:if="${prontuario == null}"
+                   class="text-base-content/50">Prontuário não encontrado.</p>
+            </div>
+        </div>
+
+        <!-- Receituário -->
+        <div class="card bg-base-100 shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-accent">
+                    <i class="fa-solid fa-prescription"></i> Receituário
+                </h2>
+
+                <div th:if="${receituario != null}">
+                    <p class="text-sm text-base-content/60 mt-2">Observação geral</p>
+                    <p class="font-semibold mb-4"
+                       th:text="${receituario.observacao}"></p>
+
+                    <!-- Itens -->
+                    <div th:if="${not #lists.isEmpty(itens)}">
+                        <p class="font-semibold text-sm mb-2">Medicamentos prescritos:</p>
+                        <div class="overflow-x-auto">
+                            <table class="table table-sm table-zebra">
+                                <thead>
+                                    <tr>
+                                        <th>Cód. Medicamento</th>
+                                        <th>Dosagem</th>
+                                        <th>Intervalo (h)</th>
+                                        <th>Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${itens}">
+                                        <td>
+                                            <span class="badge badge-outline"
+                                                  th:text="${item.medicamentoCodigo}"></span>
+                                        </td>
+                                        <td th:text="${item.dosagem}"></td>
+                                        <td th:text="${item.intervaloEntreDoses} + 'h'"></td>
+                                        <td th:text="${item.observacao}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <p th:if="${#lists.isEmpty(itens)}"
+                       class="text-base-content/50 text-sm">
+                        Nenhum medicamento prescrito.
+                    </p>
+                </div>
+
+                <p th:if="${receituario == null}"
+                   class="text-base-content/50">
+                    Nenhum receituário emitido para esta consulta.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

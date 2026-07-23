@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicamentos</title>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-base-200">
+
+	<div th:insert="~{misc/fragments :: menuAtendimento}"></div>
+
+	<div class="container mx-auto p-8">
+
+		<div class="flex justify-between items-center mb-6">
+			<div>
+				<h1 class="text-4xl font-bold text-primary">
+					<i class="fa-solid fa-pills"></i> Medicamentos
+				</h1>
+				<p class="text-base-content/70">Cadastro e gerenciamento dos
+					medicamentos utilizados pela clínica.</p>
+			</div>
+			<button class="btn btn-primary"
+				onclick="medicamento_modal.showModal()">
+				<i class="fa-solid fa-plus"></i> Novo Medicamento
+			</button>
+		</div>
+
+		<div class="overflow-x-auto bg-base-100 rounded-xl shadow-lg">
+			<table class="table table-zebra">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Dosagem</th>
+						<th>Tipo</th>
+						<th>Descrição</th>
+						<th>Observação</th>
+						<th width="170">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="m : ${medicamentos}">
+						<td>
+							<div class="font-semibold" th:text="${m.nome}"></div>
+						</td>
+						<td><span class="badge badge-info" th:text="${m.dosagem}"></span>
+						</td>
+						<td th:text="${m.tipoDosagem}"></td>
+						<td th:text="${m.descricao}"></td>
+						<td th:text="${m.observacao}"></td>
+						<td>
+							<div class="join">
+								<a class="btn btn-warning btn-sm join-item"
+									th:href="@{'/medicamentos/edit/' + ${m.codigo}}"> <i
+									class="fa-solid fa-pen"></i>
+								</a>
+								<button class="btn btn-error btn-sm join-item"
+									th:onclick="'excluir('+${m.codigo}+');'">
+									<i class="fa-solid fa-trash"></i>
+								</button>
+							</div>
+						</td>
+					</tr>
+					<tr th:if="${#lists.isEmpty(medicamentos)}">
+						<td colspan="6" class="text-center text-base-content/50 py-6">
+							Nenhum medicamento cadastrado.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<dialog id="medicamento_modal" class="modal"
+		th:attrappend="open=${medicamento != null and medicamento.codigo != 0} ? 'open' : null">
+	<div class="modal-box max-w-2xl">
+
+		<a th:href="@{/medicamentos}"
+			class="btn btn-circle btn-sm btn-ghost absolute right-2 top-2">✕</a>
+
+		<h3 class="font-bold text-2xl mb-6">
+			<i class="fa-solid fa-capsules"></i> <span
+				th:text="${medicamento.codigo != 0} ? 'Editar Medicamento' : 'Cadastro de Medicamento'"></span>
+		</h3>
+
+		<form th:action="@{/medicamentos/save}" method="post"
+			th:object="${medicamento}">
+
+			<input type="hidden" th:field="*{codigo}" />
+
+			<div class="grid grid-cols-2 gap-4">
+
+				<div>
+					<label class="label"><span class="label-text">Nome</span></label> <input
+						type="text" class="input input-bordered w-full"
+						placeholder="Nome do medicamento" th:field="*{nome}" required />
+				</div>
+
+				<div>
+					<label class="label"><span class="label-text">Tipo
+							de Dosagem</span></label> <input type="text" class="input input-bordered w-full"
+						placeholder="Ex.: mg, ml, comprimido" th:field="*{tipoDosagem}" />
+				</div>
+
+				<div class="col-span-2">
+					<label class="label"><span class="label-text">Dosagem</span></label>
+					<input type="number" class="input input-bordered w-full"
+						placeholder="Ex.: 500" th:field="*{dosagem}" min="0" />
+				</div>
+
+				<div class="col-span-2">
+					<label class="label"><span class="label-text">Descrição</span></label>
+					<textarea class="textarea textarea-bordered w-full" rows="3"
+						placeholder="Descrição do medicamento" th:field="*{descricao}"></textarea>
+				</div>
+
+				<div class="col-span-2">
+					<label class="label"><span class="label-text">Observação</span></label>
+					<textarea class="textarea textarea-bordered w-full" rows="3"
+						placeholder="Observações adicionais" th:field="*{observacao}"></textarea>
+				</div>
+
+			</div>
+
+			<div class="modal-action">
+				<a th:href="@{/medicamentos}" class="btn">Cancelar</a>
+				<button type="submit" class="btn btn-primary">
+					<i class="fa-solid fa-floppy-disk"></i> Salvar
+				</button>
+			</div>
+
+		</form>
+	</div>
+
+	<a th:href="@{/medicamentos}" class="modal-backdrop">Fechar</a> </dialog>
+
+	<script>
+		function excluir(codigo) {
+			if (confirm("Deseja excluir este medicamento?")) {
+				location.href = "/medicamentos/delete/" + codigo;
+			}
+		}
+	</script>
+
+</body>
+</html>

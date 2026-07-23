@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prontuário</title>
+
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+</head>
+
+<body class="bg-base-200">
+
+	<div th:insert="~{misc/fragments :: menuMedico}"></div>
+
+	<div class="container mx-auto p-8">
+
+		<div class="flex items-center justify-between mb-8">
+
+			<div>
+
+				<h1 class="text-4xl font-bold text-secondary">
+
+					<i class="fa-solid fa-notes-medical"></i> Prontuário Médico
+
+				</h1>
+
+				<p class="text-base-content/70">Registro do atendimento da
+					consulta.</p>
+
+			</div>
+
+			<a href="/medico/home" class="btn"> <i
+				class="fa-solid fa-arrow-left"></i> Voltar
+
+			</a>
+
+		</div>
+
+		<!-- Consulta -->
+
+		<div class="card bg-base-100 shadow-xl mb-8">
+
+			<div class="card-body">
+
+				<h2 class="card-title">
+
+					<i class="fa-solid fa-calendar-check"></i> Dados da Consulta
+
+				</h2>
+
+				<div class="grid grid-cols-2 gap-4 mt-4">
+
+					<div>
+
+						<label class="font-bold"> Paciente </label>
+
+						<p th:text="${paciente.nome}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> CPF </label>
+
+						<p th:text="${paciente.cpf}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Telefone </label>
+
+						<p th:text="${paciente.telefone}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Data </label>
+
+						<p th:text="${consulta.data}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Horário </label>
+
+						<p th:text="${consulta.horario}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Observações </label>
+
+						<p th:text="${consulta.observacoes}"></p>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Prontuário -->
+
+		<div class="card bg-base-100 shadow-xl">
+
+			<div class="card-body">
+
+				<h2 class="card-title">
+
+					<i class="fa-solid fa-file-medical"></i> Registrar Atendimento
+
+				</h2>
+
+				<form method="post" action="/prontuario/save"
+					th:object="${prontuario}">
+
+					<input type="hidden" th:field="*{id}"> <input type="hidden"
+						th:field="*{consultaId}" th:value="${consulta.id}">
+
+					<div class="form-control mt-4">
+
+						<label class="label"> <span class="label-text">
+
+								Anamnese </span>
+
+						</label>
+
+						<textarea class="textarea textarea-bordered h-28"
+							th:field="*{anamnese}" required>
+
+</textarea>
+
+					</div>
+
+					<div class="form-control mt-4">
+
+						<label class="label"> <span class="label-text">
+
+								Diagnóstico </span>
+
+						</label>
+
+						<textarea class="textarea textarea-bordered h-28"
+							th:field="*{diagnostico}" required>
+
+</textarea>
+
+					</div>
+
+					<div class="form-control mt-4">
+
+						<label class="label"> <span class="label-text">
+
+								Tratamento </span>
+
+						</label>
+
+						<textarea class="textarea textarea-bordered h-28"
+							th:field="*{tratamento}" required>
+
+</textarea>
+
+					</div>
+
+					<div class="form-control mt-4">
+
+						<label class="label"> <span class="label-text">
+
+								Observações Finais </span>
+
+						</label>
+
+						<textarea class="textarea textarea-bordered h-24"
+							th:field="*{observacoes}">
+
+</textarea>
+
+					</div>
+
+					<div class="divider">Receituário</div>
+
+					<div class="flex gap-3">
+
+						<a th:href="@{'/receituario/novo/' + ${consulta.id}}"
+							class="btn btn-outline btn-success"> <i
+							class="fa-solid fa-prescription"></i> Cadastrar Receituário
+
+						</a>
+
+					</div>
+
+					<div class="card-actions justify-end mt-8">
+
+						<button type="submit" class="btn btn-primary">
+
+							<i class="fa-solid fa-floppy-disk"></i> Salvar Prontuário
+
+						</button>
+
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consultas do Médico</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-base-200">
+
+    <div th:insert="~{misc/fragments :: menuMedico}"></div>
+
+    <div class="container mx-auto p-8">
+
+        <!-- Cabeçalho -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-secondary">
+                <i class="fa-solid fa-stethoscope"></i> Minhas Consultas
+            </h1>
+            <p class="text-base-content/70"
+               th:text="'Bem-vindo, Dr(a). ' + ${medico.nome}"></p>
+        </div>
+
+        <!-- ── Pendentes ─────────────────────────────────────────── -->
+        <h2 class="text-2xl font-bold text-warning mb-3">
+            <i class="fa-solid fa-clock"></i> Aguardando Atendimento
+        </h2>
+
+        <div class="overflow-x-auto bg-base-100 rounded-xl shadow-lg mb-10">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>Paciente (CPF)</th>
+                        <th>Data e Hora</th>
+                        <th>Previsão de Volta</th>
+                        <th>Observação</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="consulta : ${consultasPendentes}">
+                        <td>
+                            <span class="badge badge-outline"
+                                  th:text="${consulta.pacienteCpf}"></span>
+                        </td>
+                        <td th:text="${consulta.dataHora}"></td>
+                        <td th:text="${consulta.dataHoraVolta}"></td>
+                        <td th:text="${consulta.observacao}"></td>
+                        <td>
+                            <a class="btn btn-primary btn-sm"
+                               th:href="@{'/medico/atender/' + ${consulta.codigo}}">
+                                <i class="fa-solid fa-notes-medical"></i> Atender
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(consultasPendentes)}">
+                        <td colspan="5"
+                            class="text-center text-base-content/50 py-6">
+                            Nenhuma consulta pendente.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── Realizadas ─────────────────────────────────────────── -->
+        <h2 class="text-2xl font-bold text-success mb-3">
+            <i class="fa-solid fa-circle-check"></i> Consultas Realizadas
+        </h2>
+
+        <div class="overflow-x-auto bg-base-100 rounded-xl shadow-lg">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th>Paciente (CPF)</th>
+                        <th>Data e Hora</th>
+                        <th>Observação</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="consulta : ${consultasRealizadas}">
+                        <td>
+                            <span class="badge badge-success badge-outline"
+                                  th:text="${consulta.pacienteCpf}"></span>
+                        </td>
+                        <td th:text="${consulta.dataHora}"></td>
+                        <td th:text="${consulta.observacao}"></td>
+                        <td>
+                            <a class="btn btn-success btn-sm"
+                               th:href="@{'/medico/prontuario/' + ${consulta.codigo}}">
+                                <i class="fa-solid fa-file-medical"></i> Ver Prontuário
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(consultasRealizadas)}">
+                        <td colspan="4"
+                            class="text-center text-base-content/50 py-6">
+                            Nenhuma consulta realizada ainda.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

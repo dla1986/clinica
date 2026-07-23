@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Receituário</title>
+
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+</head>
+
+<body class="bg-base-200">
+
+	<div th:insert="~{misc/fragments :: menuMedico}"></div>
+
+	<div class="container mx-auto p-8">
+
+		<div class="flex justify-between items-center mb-8">
+
+			<div>
+
+				<h1 class="text-4xl font-bold text-secondary">
+
+					<i class="fa-solid fa-prescription"></i> Receituário
+
+				</h1>
+
+				<p class="text-base-content/70">Prescrição médica para o
+					paciente.</p>
+
+			</div>
+
+			<a href="/medico/home" class="btn"> <i
+				class="fa-solid fa-arrow-left"></i> Voltar
+
+			</a>
+
+		</div>
+
+		<!-- Dados da Consulta -->
+
+		<div class="card bg-base-100 shadow-xl mb-6">
+
+			<div class="card-body">
+
+				<h2 class="card-title">
+
+					<i class="fa-solid fa-user"></i> Dados da Consulta
+
+				</h2>
+
+				<div class="grid grid-cols-2 gap-4 mt-4">
+
+					<div>
+
+						<label class="font-bold"> Paciente </label>
+
+						<p th:text="${paciente.nome}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Médico </label>
+
+						<p th:text="${medico.nome}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Data </label>
+
+						<p th:text="${consulta.data}"></p>
+
+					</div>
+
+					<div>
+
+						<label class="font-bold"> Horário </label>
+
+						<p th:text="${consulta.horario}"></p>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Formulário -->
+
+		<div class="card bg-base-100 shadow-xl">
+
+			<div class="card-body">
+
+				<h2 class="card-title">
+
+					<i class="fa-solid fa-capsules"></i> Prescrição
+
+				</h2>
+
+				<form th:action="@{/receituario/save}" method="post"
+					th:object="${receituario}">
+
+					<input type="hidden" th:field="*{id}"> <input type="hidden"
+						th:field="*{consultaId}" th:value="${consulta.id}">
+
+					<div class="form-control mt-5">
+
+						<label class="label"> <span class="label-text">
+
+								Medicamento </span>
+
+						</label> <select class="select select-bordered"
+							th:field="*{medicamentoId}">
+
+							<option value="">Selecione...</option>
+
+							<option th:each="m : ${medicamentos}" th:value="${m.id}"
+								th:text="${m.nome}"></option>
+
+						</select>
+
+					</div>
+
+					<div class="form-control mt-4">
+
+						<label class="label"> <span class="label-text">
+
+								Posologia </span>
+
+						</label>
+
+						<textarea class="textarea textarea-bordered h-24"
+							placeholder="Ex.: Tomar 1 comprimido de 8 em 8 horas por 7 dias."
+							th:field="*{posologia}">
+                    </textarea>
+
+					</div>
+
+					<div class="form-control mt-4">
+
+						<label class="label"> <span class="label-text">
+
+								Observações </span>
+
+						</label>
+
+						<textarea class="textarea textarea-bordered h-24"
+							placeholder="Observações adicionais..." th:field="*{observacoes}">
+                    </textarea>
+
+					</div>
+
+					<div class="card-actions justify-end mt-8">
+
+						<button type="submit" class="btn btn-success">
+
+							<i class="fa-solid fa-floppy-disk"></i> Salvar Receituário
+
+						</button>
+
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>

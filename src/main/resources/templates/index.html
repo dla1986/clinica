@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR" data-theme="light">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Clínica Médica</title>
+
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+	<div class="hero min-h-screen">
+
+		<div class="hero-content flex-col lg:flex-row gap-12">
+
+			<!-- ================================================= -->
+
+			<div class="text-center lg:text-left max-w-xl">
+
+				<h1 class="text-6xl font-bold text-primary">
+
+					<i class="fa-solid fa-hospital"></i> Clínica Médica
+
+				</h1>
+
+				<p class="py-6 text-lg">Sistema para gerenciamento de pacientes,
+					médicos, consultas, prontuários e receituários.</p>
+
+				<div class="badge badge-outline badge-lg">Projeto da
+					disciplina de Desenvolvimento Web 3</div>
+
+			</div>
+
+			<!-- ================================================= -->
+
+			<div class="flex flex-col gap-8">
+
+				<!-- ================================================= -->
+
+				<div class="card bg-base-100 shadow-2xl w-96">
+
+					<div class="card-body">
+
+						<h2 class="card-title text-primary">
+
+							<i class="fa-solid fa-user-group"></i> Área do Atendimento
+
+						</h2>
+
+						<p>O profissional do atendimento possui acesso completo aos
+							cadastros.</p>
+
+						<div class="divider">Funcionalidades</div>
+
+						<ul class="space-y-2">
+
+							<li><i class="fa-solid fa-user text-primary"></i> Cadastro
+								de Pacientes</li>
+
+							<li><i class="fa-solid fa-user-doctor text-primary"></i>
+
+								Cadastro de Médicos</li>
+
+							<li><i class="fa-solid fa-pills text-primary"></i> Cadastro
+								de Medicamentos</li>
+
+							<li><i class="fa-solid fa-calendar-check text-primary"></i>
+
+								Cadastro de Consultas</li>
+
+						</ul>
+
+						<div class="card-actions justify-end mt-6">
+
+							<a href="/atendimento" class="btn btn-primary"> <i
+								class="fa-solid fa-arrow-right"></i> Entrar
+
+							</a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- ================================================= -->
+
+				<div class="card bg-base-100 shadow-2xl w-96">
+
+					<div class="card-body">
+
+						<h2 class="card-title text-success">
+
+							<i class="fa-solid fa-stethoscope"></i> Área Médica
+
+						</h2>
+
+						<p>Somente médicos previamente cadastrados podem acessar esta
+							área.</p>
+
+						<div class="alert alert-success mt-3">
+
+							<i class="fa-solid fa-id-card"></i> <span> Utilize seu CRM
+								como login. </span>
+
+						</div>
+
+						<div class="alert alert-warning mt-2">
+
+							<i class="fa-solid fa-circle-info"></i> <span> O cadastro
+								do médico é realizado pelo setor de atendimento. </span>
+
+						</div>
+
+						<div class="card-actions justify-end mt-6">
+
+							<a href="/login" class="btn btn-success"> <i
+								class="fa-solid fa-right-to-bracket"></i> Entrar
+
+							</a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>

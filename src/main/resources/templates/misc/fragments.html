@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+```
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- MENU DO ATENDIMENTO -->
+<div th:fragment="menuAtendimento">
+
+    <nav class="navbar bg-primary text-primary-content shadow-lg">
+
+        <div class="flex-1">
+            <a href="/atendimento" class="btn btn-ghost text-xl font-bold">
+                <i class="fa-solid fa-hospital me-2"></i>
+                Clínica Médica
+            </a>
+        </div>
+
+        <div class="flex-none">
+            <ul class="menu menu-horizontal gap-2">
+
+                <li>
+                    <a href="/atendimento">
+                        <i class="fa-solid fa-house"></i>
+                        Início
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/paciente">
+                        <i class="fa-solid fa-user"></i>
+                        Pacientes
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/medico">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        Médicos
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/medicamentos">
+                        <i class="fa-solid fa-pills"></i>
+                        Medicamentos
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/consultas">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        Consultas
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Voltar
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+    </nav>
+
+</div>
+
+<!-- MENU DO MÉDICO -->
+<div th:fragment="menuMedico">
+
+    <nav class="navbar bg-success text-success-content shadow-lg">
+
+        <div class="flex-1">
+            <a href="/medico/consultas" class="btn btn-ghost text-xl font-bold">
+                <i class="fa-solid fa-stethoscope me-2"></i>
+                Área Médica
+            </a>
+        </div>
+
+        <div class="flex-none">
+            <ul class="menu menu-horizontal gap-2">
+
+                <li>
+                    <a href="/medico/consultas">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Consultas
+                    </a>
+                </li>
+
+                
+                <li>
+                    <a href="/logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Sair
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+    </nav>
+
+</div>
+```
+
+</body>
+
+</html>

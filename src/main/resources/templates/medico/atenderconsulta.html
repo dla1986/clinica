@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Atender Consulta</title>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-200">
+
+	<div th:insert="~{misc/fragments :: menuMedico}"></div>
+
+	<div class="container mx-auto p-8 max-w-4xl">
+
+		<!-- Cabeçalho -->
+		<div class="mb-6 flex items-center gap-4">
+			<a href="/medico/consultas" class="btn btn-ghost btn-sm"> <i
+				class="fa-solid fa-arrow-left"></i> Voltar
+			</a>
+			<h1 class="text-3xl font-bold text-secondary">
+				<i class="fa-solid fa-notes-medical"></i> Atender Consulta
+			</h1>
+		</div>
+
+		<!-- Dados da Consulta + Paciente -->
+		<div class="card bg-base-100 shadow-lg mb-6">
+			<div class="card-body">
+				<h2 class="card-title text-primary">
+					<i class="fa-solid fa-user"></i> Dados do Paciente
+				</h2>
+				<div class="grid grid-cols-2 gap-4 mt-2">
+					<div>
+						<p class="text-sm text-base-content/60">Nome</p>
+						<p class="font-semibold"
+							th:text="${paciente != null} ? ${paciente.nome} : 'Não encontrado'"></p>
+					</div>
+					<div>
+						<p class="text-sm text-base-content/60">CPF</p>
+						<p class="font-semibold" th:text="${consulta.pacienteCpf}"></p>
+					</div>
+					<div>
+						<p class="text-sm text-base-content/60">Contato</p>
+						<p class="font-semibold"
+							th:text="${paciente != null} ? ${paciente.contato} : '-'"></p>
+					</div>
+					<div>
+						<p class="text-sm text-base-content/60">Plano de Saúde</p>
+						<p class="font-semibold"
+							th:text="${paciente != null} ? ${paciente.planoSaude} : '-'"></p>
+					</div>
+					<div>
+						<p class="text-sm text-base-content/60">Data e Hora</p>
+						<p class="font-semibold" th:text="${consulta.dataHora}"></p>
+					</div>
+					<div>
+						<p class="text-sm text-base-content/60">Previsão de Volta</p>
+						<p class="font-semibold" th:text="${consulta.dataHoraVolta}"></p>
+					</div>
+					<div class="col-span-2">
+						<p class="text-sm text-base-content/60">Observação da Consulta</p>
+						<p class="font-semibold" th:text="${consulta.observacao}"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Formulário -->
+		<form th:action="@{/medico/consulta/finalizar}" method="post"
+			id="formAtender">
+
+			<input type="hidden" name="consultaCodigo"
+				th:value="${consulta.codigo}" />
+
+			<!-- Prontuário -->
+			<div class="card bg-base-100 shadow-lg mb-4">
+				<div class="card-body">
+					<h2 class="card-title text-secondary">
+						<i class="fa-solid fa-file-medical"></i> Prontuário
+					</h2>
+					<div class="mt-2">
+						<label class="label"> <span class="label-text">Descrição
+								<span class="text-error">*</span>
+						</span>
+						</label>
+						<textarea name="descricao"
+							class="textarea textarea-bordered w-full" rows="4"
+							placeholder="Descreva o atendimento realizado..." required></textarea>
+					</div>
+					<div class="mt-2">
+						<label class="label"> <span class="label-text">Observação</span>
+						</label>
+						<textarea name="observacao"
+							class="textarea textarea-bordered w-full" rows="3"
+							placeholder="Observações adicionais..."></textarea>
+					</div>
+				</div>
+			</div>
+
+			<!-- Receituário -->
+			<div class="card bg-base-100 shadow-lg mb-6">
+				<div class="card-body">
+					<h2 class="card-title text-accent">
+						<i class="fa-solid fa-prescription"></i> Receituário <span
+							class="badge badge-ghost text-xs">Opcional</span>
+					</h2>
+
+					<div class="mt-2">
+						<label class="label"> <span class="label-text">Observação
+								geral do receituário</span>
+						</label>
+						<textarea name="receituarioObservacao"
+							class="textarea textarea-bordered w-full" rows="2"
+							placeholder="Ex.: Tomar os medicamentos com água..."></textarea>
+					</div>
+
+					<!-- Tabela de itens -->
+					<div class="mt-4">
+						<div class="flex justify-between items-center mb-2">
+							<span class="font-semibold text-sm"> Medicamentos
+								prescritos </span>
+							<button type="button" class="btn btn-sm btn-outline btn-accent"
+								onclick="adicionarItem()">
+								<i class="fa-solid fa-plus"></i> Adicionar medicamento
+							</button>
+						</div>
+
+						<div class="overflow-x-auto">
+							<table class="table table-sm" id="tabelaItens">
+								<thead>
+									<tr>
+										<th>Medicamento</th>
+										<th>Dosagem</th>
+										<th>Intervalo (h)</th>
+										<th>Observação</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="corpoItens">
+									<!-- linhas adicionadas via JS -->
+								</tbody>
+							</table>
+						</div>
+
+						<p id="semItens" class="text-sm text-base-content/50 mt-2">
+							Nenhum medicamento adicionado. Clique em "+ Adicionar
+							medicamento".</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex justify-end gap-3">
+				<a href="/medico/consultas" class="btn btn-ghost">Cancelar</a>
+				<button type="submit" class="btn btn-primary">
+					<i class="fa-solid fa-check"></i> Finalizar Consulta
+				</button>
+			</div>
+
+		</form>
+	</div>
+
+	<!-- Template dos medicamentos para o JS -->
+	<script th:inline="javascript">
+        const medicamentos = /*[[${medicamentos}]]*/ [];
+    </script>
+
+	<script>
+        let contadorItens = 0;
+
+        function adicionarItem() {
+            contadorItens++;
+            document.getElementById('semItens').style.display = 'none';
+
+            const options = medicamentos.map(m =>
+                `<option value="${m.codigo}">${m.nome} (${m.dosagem} ${m.tipoDosagem ?? ''})</option>`
+            ).join('');
+
+            const tr = document.createElement('tr');
+            tr.id = 'item-' + contadorItens;
+            tr.innerHTML = `
+                <td>
+                    <select name="medicamentoCodigo"
+                            class="select select-bordered select-sm w-full min-w-40">
+                        <option value="0">Selecione...</option>
+                        ${options}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="itemDosagem"
+                           class="input input-bordered input-sm w-24"
+                           min="0" placeholder="Ex.: 1"/>
+                </td>
+                <td>
+                    <input type="number" name="itemIntervalo"
+                           class="input input-bordered input-sm w-24"
+                           min="0" placeholder="Ex.: 8"/>
+                </td>
+                <td>
+                    <input type="text" name="itemObservacao"
+                           class="input input-bordered input-sm w-full"
+                           placeholder="Observação..."/>
+                </td>
+                <td>
+                    <button type="button"
+                            class="btn btn-error btn-sm btn-circle"
+                            onclick="removerItem('item-${contadorItens}')">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            document.getElementById('corpoItens').appendChild(tr);
+        }
+
+        function removerItem(id) {
+            document.getElementById(id)?.remove();
+            if (document.getElementById('corpoItens').children.length === 0) {
+                document.getElementById('semItens').style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
