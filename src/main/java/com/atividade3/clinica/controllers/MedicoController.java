@@ -216,10 +216,22 @@ public class MedicoController {
 
     @GetMapping("/edit/{crm}")
     public String edit(@PathVariable String crm, Model model) {
+
         try {
-            model.addAttribute("medico",  facade.readMedico(crm));
+            Medico medico = facade.readMedico(crm.trim());
+
+            if (medico == null) {
+                return "redirect:/medico";
+            }
+
+            model.addAttribute("medico", medico);
             model.addAttribute("medicos", facade.readAllMedicos());
-        } catch (SQLException e) { e.printStackTrace(); }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "redirect:/medico";
+        }
+
         model.addAttribute("exibirModal", true);
         return "medico/medicos";
     }
@@ -233,13 +245,31 @@ public class MedicoController {
             else
                 facade.create(medico);
         } catch (SQLException e) { e.printStackTrace(); }
-        return "redirect:/medicos";
+        return "redirect:/medico";
     }
 
     @GetMapping("/delete/{crm}")
-    public String delete(@PathVariable String crm) {
-        try { facade.deleteMedico(crm); }
-        catch (SQLException e) { e.printStackTrace(); }
-        return "redirect:/medicos";
+    public String delete(@PathVariable String crm, Model model) {
+        try {
+            // Verifica se o médico possui consultas vinculadas
+            for (Consulta c : facade.readAllConsultas()) {
+                if (c.getMedicoCrm() != null &&
+                    c.getMedicoCrm().equalsIgnoreCase(crm)) {
+
+                    model.addAttribute("medicos", facade.readAllMedicos());
+                    model.addAttribute("erro",
+                            "Não é possível excluir este médico, pois ele possui consultas cadastradas.");
+
+                    return "medico/medicos";
+                }
+            }
+
+            facade.deleteMedico(crm);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/medico";
     }
 }

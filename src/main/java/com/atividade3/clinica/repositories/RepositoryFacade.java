@@ -68,8 +68,8 @@ public class RepositoryFacade {
 		return medicoRepository.readAll();
 	}
 
-	public Medico loginMedico(String crm, String senha) throws SQLException {
-		return ((MedicoRepository) medicoRepository).login(crm, senha);
+	public Medico loginMedico(String login, String senha) throws SQLException {
+	    return ((MedicoRepository) medicoRepository).login(login, senha);
 	}
 
 	

@@ -37,36 +37,30 @@ public class MainController {
 
 	
 	@PostMapping("/login")
-    public String login(Model m,
-            @RequestParam("crm") String crm,
-            @RequestParam("senha") String senha) {
+	public String login(Model m,
+	        @RequestParam("login") String login,
+	        @RequestParam("senha") String senha) {
 
-        try {
+	    try {
 
-            Medico medico = facade.loginMedico(crm, senha);
+	        Medico medico = facade.loginMedico(login, senha);
 
-            if (medico == null) {
-                m.addAttribute("erro", "CRM ou Senha inválidos.");
-                return "medico/login";
-            }
+	        if (medico == null) {
+	            m.addAttribute("erro", "Login ou senha inválidos.");
+	            return "medico/login";
+	        }
 
+	        session.setAttribute("medicoSessao", medico);
 
-            session.setAttribute("medicoSessao", medico);
-            System.out.println("=== LOGIN ===");
-            System.out.println("Médico retornado: " + medico);
-            System.out.println("CRM: " + medico.getCrm());
-            System.out.println("Sessão ID: " + session.getId());
-            System.out.println("Sessão salva: " + session.getAttribute("medicoSessao"));
+	        return "redirect:/medico/consultas";
 
-            return "redirect:/medico/consultas";
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            m.addAttribute("erro",
-                    "Não foi possível realizar o login devido a uma falha no banco.");
-            return "medico/login";
-        }
-    }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        m.addAttribute("erro",
+	                "Não foi possível realizar o login devido a uma falha no banco.");
+	        return "medico/login";
+	    }
+	}
 
 
 	@GetMapping("/atendimento")
